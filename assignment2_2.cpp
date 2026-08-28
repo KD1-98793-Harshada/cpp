@@ -29,6 +29,7 @@ class Tollbooth{
 
 
         cout<<"Total number of Cars: "<<this->totalCars<<endl;
+        cout<<"Total amount of both Cars : "<<this->totalAmount<<endl;
         cout<<"Total number of Paying cars : "<<total_payingCars<<endl;
         cout<<"Total number of non paying cars : "<<total_nonpayingCars<<endl;
 
