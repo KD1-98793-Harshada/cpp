@@ -3,106 +3,163 @@ using namespace std;
 
 class Product
 {
-    protected:
+protected:
     int id;
     string title;
     double price;
 
-    public:
-    Product(void):id(0), title(), price(0){ }
-    Product(int id,string title, double price) : id(id), title(title), price(price){ }
+public:
+    Product() : id(1), title(" "), price(1) {};
 
-    void acceptRecord(void)
+    Product(int id, string title, int price) : id(id), title(title), price(price) {};
+
+    virtual void acceptData()
     {
-        cout<<"id : ";
-        cin>>id;
-        cout<<"title :";
-        cin>>id;
-        cout<<"price : ";
-        cin>>price;
+        cout << " ID :";
+        cin >> id;
+        cout << " Title :";
+        cin >> title;
+        cout << " Price :";
+        cin >> price;
     }
-    void printRecord(void)
+
+    virtual void printData()
     {
-        cout<<"id : "<<id<<endl;
-        cout<<"title : "<<title<<endl;
-        cout<<"price : "<<price<<endl;
+        cout << " ID : " << id << endl;
+        cout << " Title : " << title << endl;
+        cout << " Price : " << price << endl;
     }
-    ~Product(){}
+////////////////
+    virtual double bill() = 0;
 };
 
 class Book : public Product
 {
-    private:
+private:
     string author;
 
-    public:
-    Book(): author(" "){};
-    Book(int id, string title, double price, string author): Product(id, title, price), author(author){}
-    void acceptRecord(void)
+public:
+    Book() : author(" ") {};
+
+    Book(int id, string title, int price, string author) : author(author), Product(id, title, price) {};
+
+    void acceptData()
     {
-        Product::acceptRecord();
-        cout<<"Author : ";
-        cin>>author;
-    }
-    void printRecord(void)
-    {
-        Product::printRecord();
-        cout<<"Author : "<<author;
+        Product::acceptData();
+        cout << " Author :";
+        cin >> author;
     }
 
-    double calculateDiscount(void){
-        return price * 0.10;
+    void printData()
+    {
+        Product::printData();
+        cout << " Author : " << author << endl;
     }
 
+    double bill()
+    {
+        double discount = this->price * 0.1;
+        double finalPrice = this->price - discount;
+        return finalPrice;
+    }
 };
 
 class Tape : public Product
 {
-    private:
+private:
     string artist;
 
-    public:
-    Tape():artist(" "){}
-    Tape(int id, string title, double price, string artist) : Product(id, title, price), artist(artist) {}
+public:
+    Tape() : artist(" ") {};
 
-    void acceptRecord(void)
+    Tape(int id, string title, int price, string artist) : artist(artist) {};
+
+    void acceptData()
     {
-        Product::acceptRecord();
-        cout<<"Artist : ";
-        cin>>artist;
-    }
-    void printRecord(void)
-    {
-        Product::printRecord();
-        cout<<"Artist : "<<artist;
+        Product::acceptData();
+        cout << " Artist :";
+        cin >> artist;
     }
 
-    double calculateDiscount(void)
+    void printData()
     {
-        return price * 0.05;
+        Product::printData();
+        cout << " Artist : " << artist << endl;
+    }
+
+    double bill()
+    {
+        double discount = this->price * 0.05;
+        double finalPrice = this->price - discount;
+        return finalPrice;
     }
 };
 
-int menuList(){
+int menuList()
+{
     int choice;
-    cout<<"0.Exit"<<endl;
-    cout<<"1.Add Book"<<endl;
-    cout<<"2.Add Tape"<<endl;
-    cout<<"Enter a choice"<<endl;
-    cin>>choice;
+    cout << "0. Exit" << endl;
+    cout << "1. Add Book " << endl;
+    cout << "2. Add Tape " << endl;
+    cout << "3. Final Bill " << endl;
+    // cout << "3. Display Only Hours of Time " << endl;
+    cin >> choice;
     return choice;
-}
+};
 
 int main()
 {
+    Product *arr[3];
+    int count = 0;
     int choice;
+    while ((choice = ::menuList()) != 0)
+    {
 
-    while((choice = ::menuList()) != 0){
+        switch (choice)
+        {
+        case 1:
+        {
+            if (count == 3)
+            {
+                cout << " CART FULL !!" << endl;
+                break;
+            }
 
-        Product *product = new Product[3]; 
-        
-        delete[] product;
-        product = NULL;
+            arr[count] = new Book();
+            arr[count]->acceptData();
+            count++;
+            break;
+        }
+
+        case 2:
+        {
+            if (count == 3)
+            {
+                cout << " CART FULL !!" << endl;
+                break;
+            }
+
+            arr[count] = new Tape();
+            arr[count]->acceptData();
+            count++;
+            break;
+        }
+        case 3:
+        {
+            double totalBill = 0;
+            for (int i = 0; i < count; i++)
+            {
+                totalBill += arr[i]->bill();
+                arr[i]->printData();
+            }
+            cout << "Total Bill after Overall Discount : " << totalBill << endl;
+            break;
+        }
+        }
+    }
+    for (int i = 0; i < count; i++)
+    {
+        delete arr[i];
     }
 
     return 0;
