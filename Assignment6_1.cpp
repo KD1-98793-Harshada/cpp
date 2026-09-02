@@ -29,8 +29,7 @@ public:
         cout << " Title : " << title << endl;
         cout << " Price : " << price << endl;
     }
-////////////////
-    virtual double bill() = 0;
+        virtual double bill() = 0;
 };
 
 class Book : public Product
